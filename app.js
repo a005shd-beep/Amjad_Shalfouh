@@ -348,11 +348,10 @@ function init() {
   applySettings();
   updateSavedBadges();
 
+  // Always open on the home / hero section when loading or returning to the site
+  showHeroSection();
   if (state.schedule) {
-    showScheduleSection();
     renderScheduleDisplay();
-  } else {
-    showHeroSection();
   }
 
   bindEvents();

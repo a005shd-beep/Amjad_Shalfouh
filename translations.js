@@ -99,7 +99,7 @@ const TRANSLATIONS = {
       thursday: 'الخميس',
     },
     lecture: 'محاضرة',
-    lectureNum: (n) => المحاضرة ,
+    lectureNum: function(n) { return 'المحاضرة ' + n; },
     subjectPH: 'اسم المادة',
     doctorPH: 'اسم الدكتور',
     roomPH: 'رقم القاعة',
@@ -215,7 +215,7 @@ const TRANSLATIONS = {
       thursday: 'Thu',
     },
     lecture: 'Lecture',
-    lectureNum: (n) => Lecture ,
+    lectureNum: function(n) { return 'Lecture ' + n; },
     subjectPH: 'Subject Name',
     doctorPH: 'Doctor Name',
     roomPH: 'Room Number',
@@ -252,5 +252,5 @@ function tDaysShort(dayKey) {
   return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang].daysShort[dayKey]) || dayKey;
 }
 function tLectureNum(n) {
-  return TRANSLATIONS[currentLang] ? TRANSLATIONS[currentLang].lectureNum(n) : المحاضرة ;
+  return TRANSLATIONS[currentLang] ? TRANSLATIONS[currentLang].lectureNum(n) : ('المحاضرة ' + n);
 }
