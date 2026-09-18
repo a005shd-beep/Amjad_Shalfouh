@@ -24,6 +24,14 @@ const THEMES = [
     rgb: '21,101,192'
   },
   {
+    id: 'royal_blue',
+    name: { ar: 'أزرق ملكي', en: 'Royal Blue' },
+    a: '#0D47A1', b: '#1976D2',
+    gradient: 'linear-gradient(135deg, #0A2F6E 0%, #0D47A1 50%, #1E88E5 100%)',
+    cell: 'rgba(13, 71, 161, 0.08)',
+    rgb: '13,71,161'
+  },
+  {
     id: 'emerald',
     name: { ar: 'زمردي', en: 'Emerald' },
     a: '#1B5E20', b: '#388E3C',
@@ -40,8 +48,24 @@ const THEMES = [
     rgb: '106,27,154'
   },
   {
+    id: 'dark_orange',
+    name: { ar: 'برتقالي داكن', en: 'Dark Orange' },
+    a: '#A04000', b: '#D35400',
+    gradient: 'linear-gradient(135deg, #873600 0%, #A04000 50%, #E67E22 100%)',
+    cell: 'rgba(160, 64, 0, 0.09)',
+    rgb: '160,64,0'
+  },
+  {
+    id: 'amber_rust',
+    name: { ar: 'برتقالي نحاسي', en: 'Copper Amber' },
+    a: '#B94700', b: '#E65100',
+    gradient: 'linear-gradient(135deg, #7E2D00 0%, #B94700 50%, #F39C12 100%)',
+    cell: 'rgba(185, 71, 0, 0.09)',
+    rgb: '185,71,0'
+  },
+  {
     id: 'golden',
-    name: { ar: 'ذهبي', en: 'Golden' },
+    name: { ar: 'ذهبي / كهرماني', en: 'Golden Amber' },
     a: '#E65100', b: '#FF8F00',
     gradient: 'linear-gradient(135deg, #E65100 0%, #FF8F00 50%, #FFD54F 100%)',
     cell: 'rgba(255, 143, 0, 0.09)',
@@ -49,7 +73,7 @@ const THEMES = [
   },
   {
     id: 'rose',
-    name: { ar: 'وردي', en: 'Rose' },
+    name: { ar: 'وردي ياقوتي', en: 'Rose Ruby' },
     a: '#880E4F', b: '#E91E63',
     gradient: 'linear-gradient(135deg, #880E4F 0%, #E91E63 50%, #F48FB1 100%)',
     cell: 'rgba(233, 30, 99, 0.08)',
@@ -64,12 +88,44 @@ const THEMES = [
     rgb: '0,77,64'
   },
   {
+    id: 'sapphire_cyan',
+    name: { ar: 'سماوي ياقوتي', en: 'Sapphire Cyan' },
+    a: '#006064', b: '#0097A7',
+    gradient: 'linear-gradient(135deg, #004D40 0%, #00838F 50%, #00BCD4 100%)',
+    cell: 'rgba(0, 131, 143, 0.08)',
+    rgb: '0,131,143'
+  },
+  {
     id: 'indigo',
-    name: { ar: 'نيلي', en: 'Indigo' },
+    name: { ar: 'نيلي فاخر', en: 'Indigo' },
     a: '#1A237E', b: '#3F51B5',
     gradient: 'linear-gradient(135deg, #1A237E 0%, #3F51B5 60%, #7986CB 100%)',
     cell: 'rgba(63, 81, 181, 0.08)',
     rgb: '26,35,126'
+  },
+  {
+    id: 'amethyst',
+    name: { ar: 'خزامي داكن', en: 'Deep Amethyst' },
+    a: '#4A148C', b: '#7B1FA2',
+    gradient: 'linear-gradient(135deg, #38006B 0%, #4A148C 50%, #8E24AA 100%)',
+    cell: 'rgba(74, 20, 140, 0.08)',
+    rgb: '74,20,140'
+  },
+  {
+    id: 'midnight',
+    name: { ar: 'كحلي ليلي', en: 'Midnight Navy' },
+    a: '#101C36', b: '#1E3A8A',
+    gradient: 'linear-gradient(135deg, #0B132B 0%, #1C2541 50%, #3A506B 100%)',
+    cell: 'rgba(28, 37, 65, 0.08)',
+    rgb: '28,37,65'
+  },
+  {
+    id: 'coffee',
+    name: { ar: 'بني موكا', en: 'Mocha Coffee' },
+    a: '#3E2723', b: '#5D4037',
+    gradient: 'linear-gradient(135deg, #2E1C14 0%, #4E342E 50%, #795548 100%)',
+    cell: 'rgba(78, 52, 46, 0.08)',
+    rgb: '78,52,46'
   },
   {
     id: 'slate',
