@@ -451,7 +451,7 @@ function showScheduleSection() {
 
 function updateSavedBadges() {
   const count = state.savedSchedules.length;
-  DOM.topbarSavedCount.textContent = count;
+  if (DOM.topbarSavedCount) DOM.topbarSavedCount.textContent = count;
   DOM.savedCountBadgeNav.textContent = count;
   DOM.heroSavedCountPill.textContent = `${count} ${state.lang === 'ar' ? 'جداول' : 'schedules'}`;
   DOM.savedModalSubtitle.textContent = state.lang === 'ar'
@@ -1104,7 +1104,7 @@ function buildManualSlots(dayKey, dayLectures) {
         <div class="lecture-form-num">${tLectureNum(slot)}</div>
         <div class="lecture-mini-grid">
           <div class="full-width">
-            <input type="text" id="subj-${dayKey}-${slot}" placeholder="${t('subjectPH')} (اتركه فارغاً إذا لا يوجد)"
+            <input type="text" id="subj-${dayKey}-${slot}" placeholder="${t('subjectPH')}"
               value="${escapeHtml(lec.subject || '')}" />
           </div>
           ${showDr ? `<input type="text" id="doc-${dayKey}-${slot}" placeholder="${t('doctorPH')}"
@@ -1569,7 +1569,7 @@ function bindEvents() {
   // Save to Site & New Schedule
   DOM.btnSaveToSite.addEventListener('click', saveCurrentScheduleToSite);
   DOM.btnCreateNewFromSchedule.addEventListener('click', createNewSchedule);
-  DOM.topbarSavedBtn.addEventListener('click', openSavedSchedulesModal);
+  if (DOM.topbarSavedBtn) DOM.topbarSavedBtn.addEventListener('click', openSavedSchedulesModal);
   DOM.btnSavedSchedulesNav.addEventListener('click', openSavedSchedulesModal);
   DOM.heroSavedBtn.addEventListener('click', openSavedSchedulesModal);
 

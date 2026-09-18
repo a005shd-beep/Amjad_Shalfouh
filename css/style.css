@@ -183,6 +183,49 @@ img { max-width: 100%; height: auto; }
   color: var(--text-primary);
 }
 
+.topbar-telegram-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5px;
+  padding: 4px 10px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  color: #229ED9;
+  background: rgba(34, 158, 217, 0.08);
+  border: 1px solid rgba(34, 158, 217, 0.22);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  line-height: 1;
+}
+.topbar-telegram-link:hover, .topbar-telegram-link:active {
+  background: #229ED9;
+  color: #ffffff;
+  border-color: #229ED9;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(34, 158, 217, 0.35);
+}
+.topbar-telegram-link i {
+  font-size: 1.15rem;
+}
+.topbar-telegram-link .telegram-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  font-family: 'Inter', sans-serif;
+  direction: ltr;
+}
+body.dark-mode .topbar-telegram-link {
+  background: rgba(34, 158, 217, 0.15);
+  border-color: rgba(34, 158, 217, 0.3);
+  color: #38bdf8;
+}
+body.dark-mode .topbar-telegram-link:hover {
+  background: #0284c7;
+  color: #ffffff;
+}
+
 .topbar-action {
   width: 38px; height: 38px;
   display: flex; align-items: center; justify-content: center;
