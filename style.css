@@ -1208,30 +1208,7 @@ body[data-lang="en"] .search-input-wrap input {
   padding: 10px 14px 10px 38px;
 }
 
-.dept-pills-wrap {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  -webkit-overflow-scrolling: touch;
-}
-.dept-pill {
-  padding: 5px 12px;
-  border-radius: 20px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-.dept-pill.active {
-  background: var(--theme-gradient);
-  color: #fff;
-  border-color: transparent;
-}
+
 
 /* Conflict Banner */
 .conflict-banner {

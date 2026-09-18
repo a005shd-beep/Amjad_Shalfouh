@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    STUDENT SCHEDULE - MAIN APPLICATION
    By Amjad Shalfouh © 2026
    ============================================ */
@@ -184,7 +184,6 @@ const DOM = {
   scheduleTableContainer: $('#scheduleTableContainer'),
   scheduleBgOverlay: $('#scheduleBgOverlay'),
   scheduleWrapper: $('#scheduleWrapper'),
-  watermark: document.querySelector('.schedule-watermark'),
 
   // Action buttons
   editBtn: $('#editBtn'),
@@ -236,7 +235,6 @@ const DOM = {
   paneCourses: $('#paneCourses'),
   paneDayTime: $('#paneDayTime'),
   courseSearchInput: $('#courseSearchInput'),
-  deptPillsContainer: $('#deptPillsContainer'),
   conflictBanner: $('#conflictBanner'),
   conflictBannerText: $('#conflictBannerText'),
   collegeCoursesList: $('#collegeCoursesList'),
@@ -274,6 +272,13 @@ const DOM = {
   dl_word: $('#dl_word'),
   dl_excel: $('#dl_excel'),
   dl_print: $('#dl_print'),
+
+  // Image Preview & Save Modal (iPhone / Mobile)
+  imagePreviewModal: $('#imagePreviewModal'),
+  imagePreviewClose: $('#imagePreviewClose'),
+  previewImgElement: $('#previewImgElement'),
+  btnShareImage: $('#btnShareImage'),
+  btnDirectDownloadImg: $('#btnDirectDownloadImg'),
 
   toastContainer: $('#toastContainer'),
 };
@@ -433,7 +438,7 @@ function showToast(msg, type = '') {
 // =========================================================================
 // TABLE RENDERING (WITH "لا يوجد" FOR EMPTY SLOTS & 3 SLOTS SUPPORT)
 // =========================================================================
-function buildTableHTML(data, mini = false) {
+function buildTableHTML(data) {
   if (!data || !data.days) {
     return `<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.85rem">${t('noLectures')}</div>`;
   }
@@ -706,8 +711,6 @@ function deleteSavedSchedule(id) {
 // =========================================================================
 // COLLEGE MODE: كلية تقنية المعلومات - الزاوية
 // =========================================================================
-let currentCollegeDeptFilter = 'all';
-
 function openCollegeModal(editMode = false) {
   closeSidebar();
   collegeSelectedMap = {};
@@ -715,7 +718,7 @@ function openCollegeModal(editMode = false) {
   if (editMode && state.schedule && state.schedule.mode === 'college') {
     formData = JSON.parse(JSON.stringify(state.schedule));
     DOM.collegeStudentName.value = formData.studentName || '';
-    DOM.collegeDepartmentSelect.value = formData.department || 'قسم هندسة البرمجيات';
+    DOM.collegeDepartmentSelect.value = formData.department || 'هندسة البرمجيات';
     DOM.collegeNotes.value = formData.notes || '';
 
     // Reconstruct selected courses
@@ -732,7 +735,7 @@ function openCollegeModal(editMode = false) {
     formData = {
       id: `sched_${Date.now()}`,
       studentName: '',
-      department: DOM.collegeDepartmentSelect.value || 'قسم هندسة البرمجيات',
+      department: DOM.collegeDepartmentSelect.value || 'هندسة البرمجيات',
       groupNumber: '',
       notes: '',
       mode: 'college',
@@ -742,7 +745,6 @@ function openCollegeModal(editMode = false) {
     DOM.collegeNotes.value = '';
   }
 
-  renderDeptPills();
   renderCollegeCourseList();
   renderDayTimeSlotsTab();
   updateCollegePreview();
@@ -750,35 +752,18 @@ function openCollegeModal(editMode = false) {
   openModal(DOM.collegeModal);
 }
 
-function renderDeptPills() {
-  DOM.deptPillsContainer.innerHTML = '';
-  const depts = window.COLLEGE_DATA.departments || [];
-
-  depts.forEach(dept => {
-    const pill = document.createElement('div');
-    pill.className = `dept-pill ${currentCollegeDeptFilter === dept.id ? 'active' : ''}`;
-    pill.textContent = dept.name;
-    pill.addEventListener('click', () => {
-      currentCollegeDeptFilter = dept.id;
-      renderDeptPills();
-      renderCollegeCourseList();
-    });
-    DOM.deptPillsContainer.appendChild(pill);
-  });
-}
-
 function renderCollegeCourseList(searchTerm = '') {
   DOM.collegeCoursesList.innerHTML = '';
-  const courses = CollegeHelper.getCourses(currentCollegeDeptFilter);
+  const courses = CollegeHelper.getCourses();
   const term = searchTerm.trim().toLowerCase();
 
   const filtered = courses.filter(c => {
     if (!term) return true;
-    return c.name.toLowerCase().includes(term) || c.code.toLowerCase().includes(term);
+    return c.name.toLowerCase().includes(term) || (c.code && c.code.toLowerCase().includes(term));
   });
 
   if (filtered.length === 0) {
-    DOM.collegeCoursesList.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.8rem">لا توجد مواد مطابقة للبحث</div>`;
+    DOM.collegeCoursesList.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.85rem">لا توجد مواد مطابقة للبحث</div>`;
     return;
   }
 
@@ -791,7 +776,7 @@ function renderCollegeCourseList(searchTerm = '') {
 
     const optionsHtml = course.groups.map(g => {
       return `<option value="${g.groupName}" ${selectedGroup === g.groupName ? 'selected' : ''}>
-        ${g.groupName} (${tDaysShort(g.day)} م.${g.slot})
+        ${g.groupName} (${tDaysShort(g.day)} م.${g.slot} • ${g.time})
       </option>`;
     }).join('');
 
@@ -802,7 +787,7 @@ function renderCollegeCourseList(searchTerm = '') {
         </div>
         <div class="course-card-details">
           <div class="course-card-title">${escapeHtml(course.name)}</div>
-          <div class="course-card-code">${escapeHtml(course.code)} • فصل ${course.semesterLevel}</div>
+          <div class="course-card-code">${course.groups.length} ${course.groups.length === 1 ? 'مجموعة متاحة' : 'مجموعات متاحة'}</div>
         </div>
       </div>
       <select class="course-group-select" ${!isSelected ? 'disabled style="opacity:0.6"' : ''}>
@@ -917,7 +902,7 @@ function updateCollegePreview() {
     days: previewDays
   };
 
-  DOM.collegePreviewContainer.innerHTML = buildTableHTML(previewData, true);
+  DOM.collegePreviewContainer.innerHTML = buildTableHTML(previewData);
 }
 
 function generateCollegeSchedule() {
@@ -964,7 +949,7 @@ function generateCollegeSchedule() {
   const newSchedule = {
     id: formData.id || `sched_${Date.now()}`,
     studentName: name,
-    department: DOM.collegeDepartmentSelect.value || 'كلية تقنية المعلومات - الزاوية',
+    department: DOM.collegeDepartmentSelect.value || 'هندسة البرمجيات',
     groupNumber: '',
     notes: DOM.collegeNotes.value.trim(),
     mode: 'college',
@@ -1121,7 +1106,7 @@ function updateManualPreview() {
   formData.groupNumber = DOM.inputGroupNumber.value;
   formData.notes = DOM.inputNotes.value;
 
-  DOM.previewTableContainer.innerHTML = buildTableHTML(formData, true);
+  DOM.previewTableContainer.innerHTML = buildTableHTML(formData);
 }
 
 function saveManualSchedule() {
@@ -1159,38 +1144,102 @@ function saveManualSchedule() {
 // =========================================================================
 async function exportPNG() {
   if (!state.schedule) { showToast(t('noSchedule'), 'error'); return; }
-  showToast(t('imageSaved'));
 
   const exportEl = buildExportElement();
   document.body.appendChild(exportEl);
 
   try {
     const canvas = await html2canvas(exportEl, {
-      scale: 3,
+      scale: 2.5,
       useCORS: true,
       allowTaint: true,
       backgroundColor: null,
       logging: false,
     });
 
-    document.body.removeChild(exportEl);
+    if (document.body.contains(exportEl)) {
+      document.body.removeChild(exportEl);
+    }
 
-    canvas.toBlob((blob) => {
-      if (!blob) { showToast(t('imageError'), 'error'); return; }
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const fileName = `schedule-${Date.now()}.png`;
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) {
+        const dataUrl = canvas.toDataURL('image/png');
+        handleImageResult(dataUrl, null, fileName, isIOS);
+        return;
+      }
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `schedule-${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 3000);
+      handleImageResult(url, blob, fileName, isIOS);
     }, 'image/png');
 
   } catch (e) {
     if (document.body.contains(exportEl)) document.body.removeChild(exportEl);
     showToast(t('imageError'), 'error');
     console.error(e);
+  }
+}
+
+async function handleImageResult(imgUrl, blob, fileName, isIOS) {
+  // If supported, try native Web Share API (Primary for iOS / iPhone Photos library)
+  if (blob && navigator.canShare) {
+    try {
+      const file = new File([blob], fileName, { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'جدول المحاضرات'
+        });
+        showToast(t('imageSaved'), 'success');
+        return;
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        // User closed share dialog, don't show error
+        return;
+      }
+      console.log('Native share bypassed, opening preview modal:', err);
+    }
+  }
+
+  // Populate preview modal
+  if (DOM.previewImgElement) DOM.previewImgElement.src = imgUrl;
+  if (DOM.btnDirectDownloadImg) {
+    DOM.btnDirectDownloadImg.href = imgUrl;
+    DOM.btnDirectDownloadImg.download = fileName;
+  }
+
+  if (DOM.btnShareImage) {
+    if (blob && navigator.canShare) {
+      DOM.btnShareImage.style.display = 'inline-flex';
+      DOM.btnShareImage.onclick = async () => {
+        try {
+          const file = new File([blob], fileName, { type: 'image/png' });
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: 'جدول المحاضرات' });
+          }
+        } catch (e) {}
+      };
+    } else {
+      DOM.btnShareImage.style.display = 'none';
+    }
+  }
+
+  // On iOS or mobile devices, always open the preview modal so user can long-press "Save to Photos"
+  if (isIOS || window.innerWidth < 768) {
+    openModal(DOM.imagePreviewModal);
+    showToast(t('imageSaved'), 'success');
+  } else {
+    // Desktop: Direct browser download
+    const link = document.createElement('a');
+    link.href = imgUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast(t('imageSaved'), 'success');
+    setTimeout(() => URL.revokeObjectURL(imgUrl), 10000);
   }
 }
 
@@ -1616,11 +1665,18 @@ function bindEvents() {
     }
   });
 
+  // Image preview modal close
+  if (DOM.imagePreviewClose) {
+    DOM.imagePreviewClose.addEventListener('click', () => closeModal(DOM.imagePreviewModal));
+  }
+
   // Modal overlay click to close
-  [DOM.themeModal, DOM.settingsModal, DOM.downloadModal, DOM.createModal, DOM.collegeModal, DOM.savedSchedulesModal].forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal(modal);
-    });
+  [DOM.themeModal, DOM.settingsModal, DOM.downloadModal, DOM.createModal, DOM.collegeModal, DOM.savedSchedulesModal, DOM.imagePreviewModal].forEach(modal => {
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal(modal);
+      });
+    }
   });
 
   // Touch swipe to close sidebar

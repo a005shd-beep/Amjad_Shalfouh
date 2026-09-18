@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    TRANSLATIONS - AR / EN
    By Amjad Shalfouh © 2026
    ============================================ */
@@ -8,15 +8,14 @@ const TRANSLATIONS = {
     appName: 'جدول المحاضرات',
     createSchedule: 'إنشاء جدول',
     editSchedule: 'تعديل الجدول',
-    downloadSchedule: 'تحميل الجدول',
-    changeTheme: 'تغيير النمط',
+    downloadSchedule: 'تحميل وتصدير الجدول',
+    changeTheme: 'تغيير النمط والألوان',
     darkMode: 'الوضع الداكن',
     language: 'اللغة',
     settings: 'الإعدادات',
 
     welcomeTitle: 'مرحباً بك في جدول المحاضرات',
     welcomeDesc: 'اختر كليتك لتوليد جدولك مباشرة أو صمم جدولك يدوياً بسهولة',
-    createNow: 'إنشاء جدول الآن',
 
     // College & Modes
     collegeZawiya: 'كلية تقنية المعلومات - الزاوية',
@@ -26,7 +25,6 @@ const TRANSLATIONS = {
     manualDesc: 'إدخال يدوي للمواد والمواعيد والقاعات حسب رغبتك',
     savedSchedules: 'الجداول المحفوظة',
     savedDesc: 'فتح وتعديل الجداول السابقة المحفوظة في الموقع',
-    orChooseMode: 'اختر طريقة البدء:',
 
     // Actions & Navigation
     back: 'رجوع',
@@ -35,39 +33,30 @@ const TRANSLATIONS = {
     createNewSchedule: 'إنشاء جدول جديد',
     deleteSchedule: 'حذف',
     openSchedule: 'فتح',
-    duplicateSchedule: 'نسخ',
     confirmDelete: 'هل أنت متأكد من حذف هذا الجدول؟',
     noSavedSchedules: 'لا توجد جداول محفوظة حتى الآن.',
-    scheduleCount: (n) => `${n} جداول محفوظة`,
-    lastUpdated: 'آخر تحديث',
 
     // Form fields
     studentDetails: 'بيانات الطالب والكلية',
     studentName: 'اسم الطالب',
-    studentNamePH: 'أدخل اسم الطالب',
+    studentNamePH: 'أدخل اسمك',
     departmentLabel: 'القسم العلمي',
-    departmentPH: 'مثال: هندسة برمجيات / عام',
+    departmentPH: 'مثال: هندسة البرمجيات / تقنية الحاسوب / نظم المعلومات التطبيقية',
     groupLabel: 'المجموعة',
-    groupPH: 'رقم / اسم المجموعة (اختياري)',
+    groupPH: 'رقم أو اسم المجموعة',
     notesLabel: 'الملاحظات / الدعاء (تظهر أعلى الجدول في المنتصف)',
     notesPH: 'أدخل ملاحظاتك أو دعاء التوفيق هنا...',
 
     // College Schedule Builder
-    courseSelectTitle: 'اختيار المواد والمجموعات',
-    filterByDept: 'تصفية حسب القسم العلمي:',
-    selectedCoursesCount: 'المواد المختارة',
-    noCoursesSelected: 'لم يتم اختيار أي مادة بعد. يرجى اختيار المواد وتحديد المجموعة.',
-    generateScheduleBtn: 'توليد الجدول تلقائياً',
-    selectGroup: 'اختر المجموعة',
+    generateScheduleBtn: 'توليد وحفظ الجدول',
     conflictWarning: 'تنبيه تضارب: يوجد مادتان في نفس اليوم والتوقيت!',
-    noConflicts: 'المواعيد متناسقة وبدون أي تعارض',
     searchCourse: 'ابحث عن اسم المادة أو الرمز...',
     byDayTimeMethod: 'تعبئة حسب اليوم والساعة',
     byCoursesMethod: 'اختيار المواد والمجموعات (تلقائي)',
 
     // Table & Days
-    scheduleDays: 'أيام الجدول',
-    livePreview: 'معاينة مباشرة',
+    scheduleDays: 'أيام ومحاضرات الجدول',
+    livePreview: 'معاينة مباشرة للجدول',
     saveSchedule: 'حفظ الجدول',
     cancel: 'إلغاء',
     edit: 'تعديل',
@@ -110,39 +99,39 @@ const TRANSLATIONS = {
       thursday: 'الخميس',
     },
     lecture: 'محاضرة',
-    lectureNum: (n) => `المحاضرة ${n}`,
-    addLecture: '+ إضافة محاضرة',
+    lectureNum: (n) => المحاضرة ,
     subjectPH: 'اسم المادة',
     doctorPH: 'اسم الدكتور',
     roomPH: 'رقم القاعة',
     timePH: 'وقت المحاضرة',
     noLectures: 'لا توجد محاضرات',
     noLecture: 'لا يوجد',
-    maxReached: 'الحد الأقصى 3 محاضرات في اليوم',
     studentRequired: 'الرجاء إدخال اسم الطالب',
     saved: 'تم الحفظ بنجاح',
     imageSaved: 'تم حفظ الصورة',
     imageError: 'حدث خطأ أثناء حفظ الصورة',
     noSchedule: 'لا يوجد جدول لتصديره',
     groupPrefix: 'المجموعة:',
-    deptPrefix: 'القسم:',
     tableHeader: ['اليوم', 'م.1', 'م.2', 'م.3'],
     watermark: 'By Amjad Shalfouh © 2026 - جميع الحقوق محفوظة',
+    imagePreviewTitle: 'معاينة وحفظ الصورة',
+    iosSaveHint: 'لحفظ الصورة في الهاتف (الآيفون): اضغط مطولاً على الصورة ثم اختر (حفظ في الصور) أو اضغط زر المشاركة أدناه.',
+    shareImage: 'مشاركة / حفظ في الصور',
+    downloadDirect: 'تحميل مباشر',
   },
 
   en: {
     appName: 'Lecture Schedule',
     createSchedule: 'Create Schedule',
     editSchedule: 'Edit Schedule',
-    downloadSchedule: 'Download Schedule',
-    changeTheme: 'Change Theme',
+    downloadSchedule: 'Download & Export Schedule',
+    changeTheme: 'Change Theme & Colors',
     darkMode: 'Dark Mode',
     language: 'Language',
     settings: 'Settings',
 
     welcomeTitle: 'Welcome to Lecture Schedule',
     welcomeDesc: 'Select your college to auto-generate your schedule or build it manually',
-    createNow: 'Create Schedule Now',
 
     // College & Modes
     collegeZawiya: 'Faculty of Information Technology - Zawiya',
@@ -152,7 +141,6 @@ const TRANSLATIONS = {
     manualDesc: 'Enter courses, slots, and rooms manually',
     savedSchedules: 'Saved Schedules',
     savedDesc: 'Open and edit previous schedules saved on this site',
-    orChooseMode: 'Choose an option to start:',
 
     // Actions & Navigation
     back: 'Back',
@@ -161,39 +149,30 @@ const TRANSLATIONS = {
     createNewSchedule: 'New Schedule',
     deleteSchedule: 'Delete',
     openSchedule: 'Open',
-    duplicateSchedule: 'Duplicate',
     confirmDelete: 'Are you sure you want to delete this schedule?',
     noSavedSchedules: 'No saved schedules yet.',
-    scheduleCount: (n) => `${n} saved schedules`,
-    lastUpdated: 'Last updated',
 
     // Form fields
     studentDetails: 'Student & College Details',
     studentName: 'Student Name',
     studentNamePH: 'Enter student name',
     departmentLabel: 'Department',
-    departmentPH: 'e.g. Software Engineering / General',
+    departmentPH: 'e.g. Software Engineering / Computer Technology / Applied IS',
     groupLabel: 'Group',
-    groupPH: 'Group number / name (optional)',
+    groupPH: 'Group number or name',
     notesLabel: 'Notes / Supplication (Centered above the table)',
     notesPH: 'Add your notes or prayers here...',
 
     // College Schedule Builder
-    courseSelectTitle: 'Select Courses & Groups',
-    filterByDept: 'Filter by Department:',
-    selectedCoursesCount: 'Selected Courses',
-    noCoursesSelected: 'No courses selected yet. Please select courses and assign groups.',
-    generateScheduleBtn: 'Generate Schedule Automatically',
-    selectGroup: 'Select Group',
+    generateScheduleBtn: 'Generate & Save Schedule',
     conflictWarning: 'Time Conflict: Two courses are scheduled in the same time slot!',
-    noConflicts: 'Schedule is clear with no conflicts',
     searchCourse: 'Search course by name or code...',
     byDayTimeMethod: 'Fill by Day and Time Slot',
     byCoursesMethod: 'Select Courses & Groups (Auto)',
 
     // Table & Days
-    scheduleDays: 'Schedule Days',
-    livePreview: 'Live Preview',
+    scheduleDays: 'Schedule Days & Lectures',
+    livePreview: 'Live Schedule Preview',
     saveSchedule: 'Save Schedule',
     cancel: 'Cancel',
     edit: 'Edit',
@@ -236,24 +215,25 @@ const TRANSLATIONS = {
       thursday: 'Thu',
     },
     lecture: 'Lecture',
-    lectureNum: (n) => `Lecture ${n}`,
-    addLecture: '+ Add Lecture',
+    lectureNum: (n) => Lecture ,
     subjectPH: 'Subject Name',
     doctorPH: 'Doctor Name',
     roomPH: 'Room Number',
     timePH: 'Lecture Time',
     noLectures: 'No lectures',
     noLecture: 'No lecture',
-    maxReached: 'Maximum 3 lectures per day',
     studentRequired: 'Please enter student name',
     saved: 'Saved successfully',
     imageSaved: 'Image saved',
     imageError: 'Error saving image',
     noSchedule: 'No schedule to export',
     groupPrefix: 'Group:',
-    deptPrefix: 'Department:',
     tableHeader: ['Day', 'L.1', 'L.2', 'L.3'],
     watermark: 'By Amjad Shalfouh © 2026 - All Rights Reserved',
+    imagePreviewTitle: 'Image Preview & Save',
+    iosSaveHint: 'To save on iPhone/Mobile: Long press the image and select "Save to Photos" or use the Share button below.',
+    shareImage: 'Share / Save to Photos',
+    downloadDirect: 'Direct Download',
   }
 };
 
@@ -272,5 +252,5 @@ function tDaysShort(dayKey) {
   return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang].daysShort[dayKey]) || dayKey;
 }
 function tLectureNum(n) {
-  return TRANSLATIONS[currentLang] ? TRANSLATIONS[currentLang].lectureNum(n) : `المحاضرة ${n}`;
+  return TRANSLATIONS[currentLang] ? TRANSLATIONS[currentLang].lectureNum(n) : المحاضرة ;
 }
