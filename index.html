@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>جدول المحاضرات</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css" />
+
+  <!-- html2canvas -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <!-- docx (docx.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+
+  <!-- SheetJS (xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="light-mode" data-lang="ar">
+
+  <!-- ===== SIDEBAR OVERLAY ===== -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="fas fa-graduation-cap"></i>
+        <span data-t="appName">جدول المحاضرات</span>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item nav-item-highlight" id="btnZawiyaNav">
+        <i class="fas fa-university"></i>
+        <span data-t="collegeZawiyaShort">كلية تقنية المعلومات بالزاوية</span>
+      </button>
+      <button class="nav-item" id="btnCreateSchedule">
+        <i class="fas fa-plus-circle"></i>
+        <span data-t="manualSchedule">إنشاء جدول يدوياً (لجميع الكليات)</span>
+      </button>
+      <button class="nav-item" id="btnSavedSchedulesNav">
+        <i class="fas fa-folder-open"></i>
+        <span data-t="savedSchedules">الجداول المحفوظة</span>
+        <span class="nav-counter-badge" id="savedCountBadgeNav">0</span>
+      </button>
+      <button class="nav-item" id="btnEditSchedule">
+        <i class="fas fa-edit"></i>
+        <span data-t="editSchedule">تعديل الجدول الحالي</span>
+      </button>
+      <button class="nav-item" id="btnDownloadSchedule">
+        <i class="fas fa-download"></i>
+        <span data-t="downloadSchedule">تحميل وتصدير الجدول</span>
+      </button>
+
+      <div class="nav-divider"></div>
+
+      <button class="nav-item" id="btnTheme">
+        <i class="fas fa-palette"></i>
+        <span data-t="changeTheme">تغيير النمط والألوان</span>
+      </button>
+      <button class="nav-item" id="btnDarkMode">
+        <i class="fas fa-moon"></i>
+        <span data-t="darkMode">الوضع الداكن</span>
+        <div class="toggle-switch" id="darkModeToggle">
+          <div class="toggle-thumb"></div>
+        </div>
+      </button>
+      <button class="nav-item" id="btnLanguage">
+        <i class="fas fa-language"></i>
+        <span data-t="language">اللغة</span>
+        <div class="lang-badge" id="langBadge">AR</div>
+      </button>
+      <button class="nav-item" id="btnSettings">
+        <i class="fas fa-cog"></i>
+        <span data-t="settings">الإعدادات</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <p>By Amjad Shalfouh &copy; 2026</p>
+    </div>
+  </aside>
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="topbar" id="topbar">
+    <div class="topbar-left-actions">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu" title="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+      <button class="topbar-btn-back hidden" id="topbarBackBtn" aria-label="Back" title="رجوع">
+        <i class="fas fa-arrow-right"></i>
+        <span data-t="back">رجوع</span>
+      </button>
+    </div>
+
+    <div class="topbar-title">
+      <i class="fas fa-graduation-cap topbar-icon"></i>
+      <h1 data-t="appName">جدول المحاضرات</h1>
+    </div>
+
+    <div class="topbar-right-actions">
+      <button class="topbar-action" id="topbarSavedBtn" aria-label="Saved Schedules" title="الجداول المحفوظة">
+        <i class="fas fa-bookmark"></i>
+        <span class="topbar-badge" id="topbarSavedCount">0</span>
+      </button>
+      <button class="topbar-action" id="quickDownloadBtn" aria-label="Download" title="تحميل">
+        <i class="fas fa-share-alt"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content" id="mainContent">
+
+    <!-- HERO / WELCOME SECTION & MODE SELECTION -->
+    <section class="hero-section" id="heroSection">
+      <div class="hero-header-content animate-in">
+        <div class="hero-icon-wrap">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h2 data-t="welcomeTitle">مرحباً بك في جدول المحاضرات</h2>
+        <p data-t="welcomeDesc">اختر كليتك لتوليد جدولك مباشرة أو صمم جدولك يدوياً بسهولة</p>
+      </div>
+
+      <!-- Mode Selector Cards -->
+      <div class="mode-cards-container">
+        <!-- Option 1: Zawiya IT College -->
+        <div class="mode-card mode-card-featured" id="heroZawiyaBtn">
+          <div class="mode-card-icon"><i class="fas fa-university"></i></div>
+          <div class="mode-card-info">
+            <h3 data-t="collegeZawiya">كلية تقنية المعلومات - الزاوية</h3>
+            <p data-t="zawiyaDesc">اختر المواد والمجموعات أو الأوقات وسيتم بناء الجدول تلقائياً</p>
+          </div>
+          <div class="mode-card-badge">توليد تلقائي</div>
+        </div>
+
+        <!-- Option 2: Manual Schedule -->
+        <div class="mode-card" id="heroManualBtn">
+          <div class="mode-card-icon"><i class="fas fa-edit"></i></div>
+          <div class="mode-card-info">
+            <h3 data-t="manualSchedule">إنشاء جدول يدوياً (لجميع الكليات)</h3>
+            <p data-t="manualDesc">إدخال يدوي للمواد والمواعيد والقاعات حسب رغبتك</p>
+          </div>
+          <i class="fas fa-chevron-left mode-arrow"></i>
+        </div>
+
+        <!-- Option 3: Saved Schedules -->
+        <div class="mode-card" id="heroSavedBtn">
+          <div class="mode-card-icon"><i class="fas fa-folder-open"></i></div>
+          <div class="mode-card-info">
+            <h3 data-t="savedSchedules">الجداول المحفوظة</h3>
+            <p data-t="savedDesc">فتح وتعديل الجداول السابقة المحفوظة في الموقع</p>
+          </div>
+          <div class="saved-badge-pill" id="heroSavedCountPill">0 جداول</div>
+        </div>
+      </div>
+
+      <!-- Floating decorative elements -->
+      <div class="float-shape shape-1"></div>
+      <div class="float-shape shape-2"></div>
+      <div class="float-shape shape-3"></div>
+    </section>
+
+    <!-- SCHEDULE DISPLAY SECTION -->
+    <section class="schedule-section hidden" id="scheduleSection">
+
+      <!-- Navigation & Quick Actions Top Bar -->
+      <div class="schedule-top-nav">
+        <button class="nav-action-pill" id="btnBackToHome">
+          <i class="fas fa-arrow-right"></i>
+          <span data-t="backToHome">الرجوع للرئيسية</span>
+        </button>
+        <div class="schedule-top-nav-group">
+          <button class="nav-action-pill nav-pill-save" id="btnSaveToSite" title="حفظ الجدول في الموقع">
+            <i class="fas fa-bookmark"></i>
+            <span data-t="saveToSite">حفظ في الموقع</span>
+          </button>
+          <button class="nav-action-pill nav-pill-new" id="btnCreateNewFromSchedule" title="إنشاء جدول جديد مع إبقاء الحالي محفوظاً">
+            <i class="fas fa-plus"></i>
+            <span data-t="createNewSchedule">جدول جديد</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Student Info Bar (CENTERED) -->
+      <div class="student-info-bar centered-info-bar">
+        <div class="student-info-item" id="displayStudentNameWrap">
+          <i class="fas fa-user-graduate"></i>
+          <span id="displayStudentName" class="student-name-text">-</span>
+        </div>
+        <div class="student-info-item" id="displayDepartmentWrap">
+          <i class="fas fa-layer-group"></i>
+          <span id="displayDepartment" class="student-dept-text">-</span>
+        </div>
+        <div class="student-info-item" id="displayGroupWrap">
+          <i class="fas fa-users"></i>
+          <span id="displayGroupName" class="student-group-text">-</span>
+        </div>
+      </div>
+
+      <!-- Notes / Supplication Section (CENTERED) -->
+      <div class="notes-section centered-notes-section" id="notesDisplaySection">
+        <div class="notes-card centered-notes-card">
+          <i class="fas fa-quote-right notes-quote-icon"></i>
+          <p id="displayNotes" class="notes-text"></p>
+          <i class="fas fa-quote-left notes-quote-icon"></i>
+        </div>
+      </div>
+
+      <!-- Schedule Table Wrapper -->
+      <div class="schedule-wrapper" id="scheduleWrapper">
+        <div class="schedule-bg-overlay" id="scheduleBgOverlay"></div>
+        <div class="schedule-table-container" id="scheduleTableContainer">
+          <!-- Table generated by JS -->
+        </div>
+        <div class="schedule-watermark">By Amjad Shalfouh &copy; 2026</div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="action-btn btn-edit" id="editBtn">
+          <i class="fas fa-pen"></i>
+          <span data-t="edit">تعديل</span>
+        </button>
+        <button class="action-btn btn-download" id="downloadPngBtn">
+          <i class="fas fa-image"></i>
+          <span data-t="saveImage">حفظ صورة</span>
+        </button>
+        <button class="action-btn btn-print" id="printBtn">
+          <i class="fas fa-print"></i>
+          <span data-t="print">طباعة</span>
+        </button>
+        <button class="action-btn btn-more" id="moreExportBtn">
+          <i class="fas fa-ellipsis-h"></i>
+          <span data-t="more">المزيد</span>
+        </button>
+      </div>
+
+      <!-- Export Dropdown -->
+      <div class="export-dropdown hidden" id="exportDropdown">
+        <button class="export-item" id="exportWordBtn">
+          <i class="fas fa-file-word"></i>
+          <span data-t="exportWord">تصدير Word</span>
+        </button>
+        <button class="export-item" id="exportExcelBtn">
+          <i class="fas fa-file-excel"></i>
+          <span data-t="exportExcel">تصدير Excel</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== MODAL: COLLEGE SCHEDULE BUILDER (كلية تقنية المعلومات - الزاوية) ===== -->
+  <div class="modal-overlay hidden" id="collegeModal">
+    <div class="modal-panel modal-wide" id="collegeModalPanel">
+      <div class="modal-header">
+        <div class="modal-header-with-icon">
+          <i class="fas fa-university modal-header-icon"></i>
+          <div>
+            <h2 class="modal-title" data-t="collegeZawiya">كلية تقنية المعلومات - الزاوية</h2>
+            <p class="modal-subtitle">اختر المواد والمجموعات لبناء الجدول تلقائياً</p>
+          </div>
+        </div>
+        <button class="modal-close" id="collegeModalClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Student Info Section -->
+        <div class="form-section">
+          <h3 class="form-section-title" data-t="studentDetails">بيانات الطالب والكلية</h3>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label data-t="studentName">اسم الطالب</label>
+              <input type="text" id="collegeStudentName" data-t-placeholder="studentNamePH" placeholder="أدخل اسمك" />
+            </div>
+            <div class="form-group">
+              <label data-t="departmentLabel">القسم العلمي</label>
+              <select id="collegeDepartmentSelect">
+                <option value="المرحلة العامة (إعداد)">المرحلة العامة (إعداد)</option>
+                <option value="قسم هندسة البرمجيات">قسم هندسة البرمجيات</option>
+                <option value="قسم علوم الحاسوب">قسم علوم الحاسوب</option>
+                <option value="قسم الشبكات والاتصالات">قسم الشبكات والاتصالات</option>
+                <option value="قسم نظم المعلومات">قسم نظم المعلومات</option>
+                <option value="قسم الذكاء الاصطناعي">قسم الذكاء الاصطناعي</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-t="notesLabel">الملاحظات / الدعاء (تظهر أعلى الجدول في المنتصف)</label>
+            <textarea id="collegeNotes" rows="2" data-t-placeholder="notesPH" placeholder="اللهم لا سهل إلا ما جعلته سهلاً..."></textarea>
+          </div>
+        </div>
+
+        <!-- Mode Tabs: By Course & Groups OR By Day & Time -->
+        <div class="form-section">
+          <div class="tabs-header">
+            <button class="tab-btn active" id="tabCoursesBtn" data-t="byCoursesMethod">
+              <i class="fas fa-book-reader"></i>
+              <span>اختيار المواد والمجموعات (تلقائي)</span>
+            </button>
+            <button class="tab-btn" id="tabDayTimeBtn" data-t="byDayTimeMethod">
+              <i class="fas fa-calendar-check"></i>
+              <span>تعبئة حسب اليوم والساعة</span>
+            </button>
+          </div>
+
+          <!-- TAB 1 CONTENT: SELECT COURSES & GROUPS -->
+          <div class="tab-pane active" id="paneCourses">
+            <!-- Filter Bar -->
+            <div class="courses-filter-bar">
+              <div class="search-input-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="courseSearchInput" placeholder="ابحث عن اسم المادة أو الرمز..." />
+              </div>
+              <div class="dept-pills-wrap" id="deptPillsContainer">
+                <!-- Generated by JS -->
+              </div>
+            </div>
+
+            <!-- Conflict / Status Banner -->
+            <div class="conflict-banner hidden" id="conflictBanner">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span id="conflictBannerText">يوجد تضارب في المواعيد</span>
+            </div>
+
+            <!-- Available Courses List -->
+            <div class="college-courses-list" id="collegeCoursesList">
+              <!-- Generated by JS -->
+            </div>
+          </div>
+
+          <!-- TAB 2 CONTENT: SELECT BY DAY & TIME -->
+          <div class="tab-pane hidden" id="paneDayTime">
+            <p class="tab-help-text">اختر المادة لكل فترة محاضرة في الأسبوع من المواد المجدولة في الكلية:</p>
+            <div class="daytime-slots-container" id="dayTimeSlotsContainer">
+              <!-- Generated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Preview in College Modal -->
+        <div class="form-section">
+          <h3 class="form-section-title" data-t="livePreview">معاينة مباشرة للجدول</h3>
+          <div class="preview-wrapper">
+            <div class="preview-table-container" id="collegePreviewContainer">
+              <!-- Preview generated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="collegeModalCancelBtn">
+          <span data-t="cancel">إلغاء</span>
+        </button>
+        <button class="btn-primary" id="collegeGenerateBtn">
+          <i class="fas fa-magic"></i>
+          <span data-t="generateScheduleBtn">توليد وحفظ الجدول</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: MANUAL CREATE / EDIT SCHEDULE ===== -->
+  <div class="modal-overlay hidden" id="createModal">
+    <div class="modal-panel" id="createModalPanel">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle" data-t="createSchedule">إنشاء جدول</h2>
+        <button class="modal-close" id="modalClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Student Details -->
+        <div class="form-section">
+          <h3 class="form-section-title" data-t="studentDetails">بيانات الطالب</h3>
+          <div class="form-group">
+            <label data-t="studentName">اسم الطالب</label>
+            <input type="text" id="inputStudentName" data-t-placeholder="studentNamePH" placeholder="أدخل اسمك" />
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label data-t="departmentLabel">القسم</label>
+              <input type="text" id="inputDepartment" data-t-placeholder="departmentPH" placeholder="مثال: هندسة برمجيات / عام" />
+            </div>
+            <div class="form-group" id="groupFieldWrap">
+              <label data-t="groupLabel">المجموعة</label>
+              <input type="text" id="inputGroupNumber" data-t-placeholder="groupPH" placeholder="رقم أو اسم المجموعة" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-t="notesLabel">الملاحظات / الدعاء (تظهر أعلى الجدول في المنتصف)</label>
+            <textarea id="inputNotes" rows="2" data-t-placeholder="notesPH" placeholder="أضف ملاحظاتك أو دعاء التوفيق هنا..."></textarea>
+          </div>
+        </div>
+
+        <!-- Days & Lectures -->
+        <div class="form-section">
+          <h3 class="form-section-title" data-t="scheduleDays">أيام ومحاضرات الجدول</h3>
+          <div class="days-container" id="daysContainer">
+            <!-- Days generated by JS -->
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="form-section">
+          <h3 class="form-section-title" data-t="livePreview">معاينة مباشرة</h3>
+          <div class="preview-wrapper" id="previewWrapper">
+            <div class="preview-table-container" id="previewTableContainer">
+              <!-- Preview generated by JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modalCancelBtn">
+          <span data-t="cancel">إلغاء</span>
+        </button>
+        <button class="btn-primary" id="modalSaveBtn">
+          <i class="fas fa-check"></i>
+          <span data-t="saveSchedule">حفظ الجدول</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: SAVED SCHEDULES (الجداول المحفوظة) ===== -->
+  <div class="modal-overlay hidden" id="savedSchedulesModal">
+    <div class="modal-panel" id="savedSchedulesPanel">
+      <div class="modal-header">
+        <div class="modal-header-with-icon">
+          <i class="fas fa-folder-open modal-header-icon"></i>
+          <div>
+            <h2 class="modal-title" data-t="savedSchedules">الجداول المحفوظة</h2>
+            <p class="modal-subtitle" id="savedModalSubtitle">جميع الجداول المخزنة في الموقع</p>
+          </div>
+        </div>
+        <button class="modal-close" id="savedSchedulesClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="saved-schedules-list" id="savedSchedulesList">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="savedModalBackBtn">
+          <i class="fas fa-arrow-right"></i>
+          <span data-t="back">رجوع</span>
+        </button>
+        <button class="btn-primary" id="savedModalCreateNewBtn">
+          <i class="fas fa-plus"></i>
+          <span data-t="createNewSchedule">إنشاء جدول جديد</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: THEME PICKER ===== -->
+  <div class="modal-overlay hidden" id="themeModal">
+    <div class="modal-panel modal-small" id="themeModalPanel">
+      <div class="modal-header">
+        <h2 class="modal-title" data-t="chooseTheme">اختر النمط</h2>
+        <button class="modal-close" id="themeModalClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="theme-note" data-t="themeNote">اختر لون الجدول - الموقع يبقى بألوانه الأساسية</p>
+        <div class="themes-grid" id="themesGrid">
+          <!-- Themes generated by JS -->
+        </div>
+
+        <!-- Custom Background -->
+        <div class="bg-upload-section">
+          <h4 data-t="customBg">خلفية مخصصة للجدول</h4>
+          <div class="bg-upload-wrap">
+            <label class="bg-upload-btn" for="bgImageInput">
+              <i class="fas fa-image"></i>
+              <span data-t="uploadImage">رفع صورة</span>
+              <input type="file" id="bgImageInput" accept="image/*" hidden />
+            </label>
+            <button class="bg-remove-btn" id="removeBgBtn">
+              <i class="fas fa-trash"></i>
+              <span data-t="removeBg">إزالة الخلفية</span>
+            </button>
+          </div>
+          <div class="bg-preview" id="bgPreview"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: SETTINGS ===== -->
+  <div class="modal-overlay hidden" id="settingsModal">
+    <div class="modal-panel modal-small" id="settingsModalPanel">
+      <div class="modal-header">
+        <h2 class="modal-title" data-t="settings">الإعدادات</h2>
+        <button class="modal-close" id="settingsModalClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-list">
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-layer-group"></i>
+              <span data-t="showDepartment">إظهار القسم</span>
+            </div>
+            <div class="toggle-switch" id="departmentToggle" data-setting="showDepartment">
+              <div class="toggle-thumb"></div>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-users"></i>
+              <span data-t="showGroup">إظهار المجموعة</span>
+            </div>
+            <div class="toggle-switch" id="groupToggle" data-setting="showGroup">
+              <div class="toggle-thumb"></div>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-user-md"></i>
+              <span data-t="showDoctor">إظهار اسم الدكتور</span>
+            </div>
+            <div class="toggle-switch" id="doctorToggle" data-setting="showDoctor">
+              <div class="toggle-thumb"></div>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-door-open"></i>
+              <span data-t="showRoom">إظهار رقم القاعة</span>
+            </div>
+            <div class="toggle-switch" id="roomToggle" data-setting="showRoom">
+              <div class="toggle-thumb"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: DOWNLOAD OPTIONS ===== -->
+  <div class="modal-overlay hidden" id="downloadModal">
+    <div class="modal-panel modal-small" id="downloadModalPanel">
+      <div class="modal-header">
+        <h2 class="modal-title" data-t="downloadSchedule">تحميل الجدول</h2>
+        <button class="modal-close" id="downloadModalClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="download-options">
+          <button class="download-option-btn" id="dl_png">
+            <div class="dl-icon dl-icon-img"><i class="fas fa-image"></i></div>
+            <div class="dl-info">
+              <span class="dl-title">PNG</span>
+              <span class="dl-desc" data-t="pngDesc">صورة بجودة عالية</span>
+            </div>
+          </button>
+          <button class="download-option-btn" id="dl_word">
+            <div class="dl-icon dl-icon-word"><i class="fas fa-file-word"></i></div>
+            <div class="dl-info">
+              <span class="dl-title">Word</span>
+              <span class="dl-desc" data-t="wordDesc">ملف Word (.docx)</span>
+            </div>
+          </button>
+          <button class="download-option-btn" id="dl_excel">
+            <div class="dl-icon dl-icon-excel"><i class="fas fa-file-excel"></i></div>
+            <div class="dl-info">
+              <span class="dl-title">Excel</span>
+              <span class="dl-desc" data-t="excelDesc">ملف Excel (.xlsx)</span>
+            </div>
+          </button>
+          <button class="download-option-btn" id="dl_print">
+            <div class="dl-icon dl-icon-print"><i class="fas fa-print"></i></div>
+            <div class="dl-info">
+              <span class="dl-title" data-t="print">طباعة</span>
+              <span class="dl-desc" data-t="printDesc">طباعة مباشرة</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/college-data.js"></script>
+  <script src="js/translations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
